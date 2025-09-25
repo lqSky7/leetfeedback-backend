@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, github_username, github_repo, github_branch } = req.body;
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -21,13 +21,18 @@ const register = async (req, res) => {
       username,
       email,
       password_hash,
+      github: {
+        username: github_username,
+        repo: github_repo,
+        branch: github_branch
+      },
       role: 'student'
     });
 
     await user.save();
 
     // Create JWT
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.status(201).json({ token, user: { id: user._id, username, email, role: user.role } });
   } catch (err) {
@@ -56,7 +61,7 @@ const login = async (req, res) => {
     await user.save();
 
     // Create JWT
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.json({ token, user: { id: user._id, username: user.username, email, role: user.role } });
   } catch (err) {
@@ -66,7 +71,7 @@ const login = async (req, res) => {
 
 const githubCallback = (req, res) => {
   // After GitHub auth, redirect or send token
-  const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ id: req.user._id, role: req.user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
   res.redirect(`http://localhost:3000/auth/callback?token=${token}`); // Assuming frontend on 3000
 };
 

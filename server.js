@@ -36,6 +36,12 @@ app.use(passport.initialize());
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/git', require('./routes/git'));
+
+// Health check
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+});
 
 app.get('/', (req, res) => {
   res.send('LeetFeedback Backend API');

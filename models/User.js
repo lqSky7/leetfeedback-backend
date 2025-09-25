@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema({
   github: {
     id: String,
     username: String,
+    repo: String,
+    branch: String,
     linked: { type: Boolean, default: false }
   },
   role: { type: String, enum: ['student', 'admin'], default: 'student' },

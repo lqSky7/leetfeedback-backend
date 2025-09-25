@@ -17,7 +17,8 @@
     "express-rate-limit": "^6.10.0",
     "passport": "^0.6.0",
     "passport-github2": "^0.1.12",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "axios": "^1.5.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
