@@ -19,9 +19,10 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: true, credentials: true })); // Allow credentials for cookies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(require('cookie-parser')());
 
 // Rate limiting
 const limiter = rateLimit({
@@ -37,6 +38,7 @@ app.use(passport.initialize());
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/git', require('./routes/git'));
+app.use('/api/problems', require('./routes/problems'));
 
 // Health check
 app.get('/health', (req, res) => {

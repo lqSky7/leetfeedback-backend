@@ -32,7 +32,7 @@ const register = async (req, res) => {
     await user.save();
 
     // Create JWT
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1y' });
 
     res.status(201).json({ token, user: { id: user._id, username, email, role: user.role } });
   } catch (err) {
@@ -61,7 +61,10 @@ const login = async (req, res) => {
     await user.save();
 
     // Create JWT
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '10y' });
+
+    // Set cookie
+    res.cookie('token', token, { httpOnly: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 }); // 10 years
 
     res.json({ token, user: { id: user._id, username: user.username, email, role: user.role } });
   } catch (err) {
@@ -71,7 +74,7 @@ const login = async (req, res) => {
 
 const githubCallback = (req, res) => {
   // After GitHub auth, redirect or send token
-  const token = jwt.sign({ id: req.user._id, role: req.user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ id: req.user._id, role: req.user.role }, process.env.JWT_SECRET, { expiresIn: '10y' });
   res.redirect(`http://localhost:3000/auth/callback?token=${token}`); // Assuming frontend on 3000
 };
 
