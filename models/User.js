@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
     branch: String,
     linked: { type: Boolean, default: false }
   },
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   role: { type: String, enum: ['student', 'admin'], default: 'student' },
   created_at: { type: Date, default: Date.now },
   last_active: { type: Date, default: Date.now }

@@ -1,4 +1,5 @@
 const Problem = require('../models/Problem');
+const updateGamification = require('../services/gamificationService');
 
 exports.pushProblem = async (req, res) => {
   try {
@@ -28,6 +29,15 @@ exports.pushProblem = async (req, res) => {
     });
 
     await problem.save();
+
+    // Update gamification based on difficulty
+    let xpGain = 10; // default
+    if (difficulty === 0) xpGain = 10;
+    else if (difficulty === 1) xpGain = 20;
+    else if (difficulty === 2) xpGain = 30;
+
+    await updateGamification(req.user.id, xpGain);
+
     res.status(201).json({ message: 'Problem added successfully', problem });
   } catch (error) {
     res.status(500).json({ error: error.message });

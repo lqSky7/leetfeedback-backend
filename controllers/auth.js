@@ -66,7 +66,7 @@ const login = async (req, res) => {
     // Set cookie
     res.cookie('token', token, { httpOnly: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 }); // 10 years
 
-    res.json({ token, user: { id: user._id, username: user.username, email, role: user.role } });
+    res.json({ token, user: { id: user._id, username: user.username, email, role: user.role, github: user.github } });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -78,4 +78,16 @@ const githubCallback = (req, res) => {
   res.redirect(`http://localhost:3000/auth/callback?token=${token}`); // Assuming frontend on 3000
 };
 
-module.exports = { register, login, githubCallback };
+const updateGithub = async (req, res) => {
+  try {
+    const { github } = req.body;
+    const user = await User.findById(req.user.id);
+    user.github = { ...user.github, ...github, linked: true };
+    await user.save();
+    res.json({ message: 'GitHub data updated', github: user.github });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { register, login, githubCallback, updateGithub };

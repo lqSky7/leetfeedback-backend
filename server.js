@@ -39,6 +39,9 @@ app.use(passport.initialize());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/git', require('./routes/git'));
 app.use('/api/problems', require('./routes/problems'));
+app.use('/api/gamification', require('./routes/gamification'));
+app.use('/api/friends', require('./routes/friends'));
+app.use('/api/admin', require('./routes/admin'));
 
 // Health check
 app.get('/health', (req, res) => {
