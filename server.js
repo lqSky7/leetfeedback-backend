@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const passport = require('passport');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,8 +30,12 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// Passport
+require('./config/passport');
+app.use(passport.initialize());
+
 // Routes
-// TODO: Add routes here
+app.use('/api/auth', require('./routes/auth'));
 
 app.get('/', (req, res) => {
   res.send('LeetFeedback Backend API');
