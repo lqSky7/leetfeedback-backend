@@ -42,6 +42,7 @@ app.use('/api/problems', require('./routes/problems'));
 app.use('/api/gamification', require('./routes/gamification'));
 app.use('/api/friends', require('./routes/friends'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/username', require('./routes/username'));
 
 // Health check
 app.get('/health', (req, res) => {
